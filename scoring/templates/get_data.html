@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+{% load static %}
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LLM 知识库管理系统</title>
+    <link rel="stylesheet" href="{% static 'recall/css/style.css' %}">
+</head>
+<body>
+<header class="lyear-layout-header">
+    <nav class="navbar navbar-default">
+        <div class="topbar">
+
+            <div class="topbar-left">
+                <span class="navbar-page-title" style="font-size:30px"> LLM 知识库管理系统</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title"><a href="/scoring/upload/">知识库管理</a></span>
+                <span class="navbar-page-title"><a href="/nl2sql/nl2_upload/">智能问数</a></span>
+                <span class="navbar-page-title"><a href="/scoring/to_llm_id">智能问答</a></span>
+                {% if user.is_authenticated %}
+                    <span class="navbar-page-title"><a href="/authing/profile/">个人信息</a></span>
+                    <span class="navbar-page-title"><a href="/authing/logout/">退出</a></span>
+                {% else %}
+                    <span class="navbar-page-title"><a href="/authing/login/">登录/注册</a></span>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="container">
+    <a href="javascript:history.back()" class="back-button" style="text-align: left;">←返回</a>
+    <h1>LLM 知识库召回容器</h1>
+    <form id="recallForm" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="question">* 问题：</label>
+            <input type="search" id="question" name="question" placeholder="请输入你的问题">
+        </div>
+
+        <div class="form-group">
+            <label for="embedding">ES 知识库名称：</label>
+            <input type="search" id="es" name="es" placeholder="请输入 ES 知识库名称" value="{{ es_name }}">
+        </div>
+
+        <div class="form-group">
+            <label for="embedding">Milvus 知识库名称：</label>
+            <input type="search" id="milvus" name="milvus" placeholder="请输入 Milvus 知识库名称" value="{{ milvus_name }}">
+        </div>
+
+        <div class="form-group">
+            <label for="coarse_topk">* 粗召回TopK：</label>
+            <input type="number" id="coarse_topk" name="coarse_topk" placeholder="例如：10">
+        </div>
+
+        <div class="form-group">
+            <label for="fine_topk">* 精召回TopK：</label>
+            <input type="number" id="fine_topk" name="fine_topk" placeholder="例如：5">
+        </div>
+
+        {% csrf_token %}
+        <button type="submit" id="submitBtn">提交</button>
+    </form>
+</div>
+<!-- 弹窗容器 -->
+<div id="modal" class="modal">
+    <div class="modal-content">
+        <span class="close-button">&times;</span>
+        <table id="messageTable" border="1">
+            <thead>
+            <tr>
+                <th style="text-align: center">召回结果</th>
+            </tr>
+            </thead>
+            <tbody id="messageTableBody">
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- 加载动画 -->
+<div id="loading">加载中...</div>
+
+<script>
+    // 从DOM中获取CSRF令牌
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    document.getElementById('submitBtn').addEventListener('click', function () {
+        // 显示加载动画
+        document.getElementById('loading').style.display = 'block';
+        // 提交表单
+        document.getElementById('recallForm').onsubmit = function (event) {
+            event.preventDefault();
+            var formData = new FormData(this);
+            fetch('/scoring/recall/', {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': csrftoken
+                },
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    // 隐藏加载动画
+                    document.getElementById('loading').style.display = 'none';
+
+                    // 将 message 数据插入表格
+                    const message = data.message; // 假设从接口返回的数据中获取 message
+                    const tableBody = document.getElementById('messageTableBody');
+                    tableBody.innerHTML = ''; // 清空现有的表格内容
+
+                    message.forEach(item => {
+                        const row = document.createElement('tr');
+                        const cell = document.createElement('td');
+                        cell.textContent = item;
+                        row.appendChild(cell);
+                        tableBody.appendChild(row);
+                    });
+
+                    // 显示弹窗
+                    document.getElementById('modal').style.display = 'block';
+                }).catch(error => {
+                // 隐藏加载动画
+                document.getElementById('loading').style.display = 'none';
+
+                console.error('Error:', error);
+                alert('接口执行失败');
+            });
+        }
+    });
+    // 获取关闭按钮元素
+    var closeButton = document.querySelector('.close-button');
+
+    // 关闭弹窗
+    closeButton.addEventListener('click', function () {
+        document.getElementById('modal').style.display = 'none';
+    });
+
+
+</script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LLM 知识库管理系统</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'nl2_upload/css/style.css' %}">
+</head>
+<body>
+<header class="lyear-layout-header">
+    <nav class="navbar navbar-default">
+        <div class="topbar">
+
+            <div class="topbar-left">
+                <span class="navbar-page-title" style="font-size:30px"> LLM 知识库管理系统</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title"><a href="/scoring/upload/">知识库管理</a></span>
+                <span class="navbar-page-title"><a href="/nl2sql/nl2_upload/">智能问数</a></span>
+                <span class="navbar-page-title"><a href="/scoring/to_llm_id">智能问答</a></span>
+                {% if user.is_authenticated %}
+                    <span class="navbar-page-title"><a href="/authing/profile/">个人信息</a></span>
+                    <span class="navbar-page-title"><a href="/authing/logout/">退出</a></span>
+                {% else %}
+                    <span class="navbar-page-title"><a href="/authing/login/">登录/注册</a></span>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+</header>
+
+<div class="wrapper" style="margin-top: 5%">
+    <h2>项目建设容器</h2>
+    <div class="divider"></div> <!-- 分割线 -->
+    <form name="yangbenForm" enctype="multipart/form-data">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="name">* 项目名称</label>
+            <input type="text" id="name" name="name" required
+                   placeholder="请输入项目名称（仅支持字母下划线数字、且不能以数字开头）"
+                   oninput="validateInput(this)">
+        </div>
+        <div class="form-group">
+            <label for="name">项目简介</label>
+            <input type="text" name="content" id="content" placeholder="描述一些内容......"/>
+        </div>
+        <div class="form-group">
+            <label for="file">* 选择上传Excel文件</label>
+            <input type="file" name="file1" id="file1" accept=".xlsx"/>
+        </div>
+        <div class="form-group">
+            <label for="file">* 选择上传SQL文件</label>
+            <input type="file" id="file2" name="file2" accept=".sql"/>
+        </div>
+        <button type="submit">上传</button>
+    </form>
+</div>
+<div class="wrapper">
+    <h2>项目信息容器</h2>
+    <div class="divider"></div> <!-- 分割线 -->
+    <div class="row" id="carList"></div>
+</div>
+
+<script>
+    function validateInput(input) {
+        // Get the current value of the input field
+        const value = input.value;
+
+        // Define regex to match valid characters (letters, numbers, and underscores) and filter out invalid characters
+        const validCharsRegex = /^[a-zA-Z0-9_]*$/;
+
+        // Remove characters that are not valid
+        input.value = value.split('').filter(char => validCharsRegex.test(char)).join('');
+
+        // Ensure the input does not start with a digit
+        if (/^\d/.test(input.value)) {
+            input.value = input.value.replace(/^\d/, '');
+        }
+    }
+
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+    document.addEventListener('DOMContentLoaded', function (event) {
+        const form = document.getElementsByName('yangbenForm')[0];
+        console.log(form)
+        if (form) {
+            form.onsubmit = function (event) {
+                event.preventDefault();
+                var formData = new FormData(this);
+                alert('项目所关联的建设已在后台开始执行');
+                fetch('/nl2sql/nl2_upload/', {
+                    method: 'POST',
+                    headers: {
+                        'X-CSRFToken': csrftoken
+                    },
+                    body: formData
+                })
+                location.reload()
+                {#.then(response => response.json())#}
+                {#.then(data => {#}
+                {#    alert(data.message);})#}
+                {#.catch(error => {#}
+                {#    console.error('Error:', error);});#}
+            };
+        } else {
+            console.error("Form not found!");
+        }
+
+        function renderCards(data) {
+            const carList = document.getElementById('carList');
+            carList.innerHTML = ''; // 清空现有内容
+
+            data.forEach(item => {
+                const [name, statute, time] = item;
+                const cardHtml = `
+                <div class="col-sm-6 col-lg-3">
+                    <div class="card">
+                        <div class="card-header bg-info">
+                            <h4 style="white-space:nowrap;overflow:hidden;">项目名称:${name}</h4>
+                            <h4 style="white-space:nowrap;overflow:hidden;">状态:${statute}</h4>
+                            <h4 style="white-space:nowrap;overflow:hidden;">创建时间:${time}</h4>
+                            <ul class="card-actions">
+                                <li>
+                                    <button type="button" onclick="fetchDetails('${name}')" ${statute === '执行中' ? 'disabled' : ''}><i class="mdi mdi-more"></i>详情信息</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+                carList.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        }
+
+        fetch('/nl2sql/nl2_select/')
+            .then(response => response.json())
+            .then(data => {
+                renderCards(data.message);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    });
+
+    function fetchDetails(name) {
+        location.href = "/nl2sql/nl2_detail/" + encodeURIComponent(name) + "/";
+    }
+</script>
+</body>
+</html>

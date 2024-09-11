@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LLM 知识库管理系统</title>
+    <link rel="stylesheet" href="{% static '/css/bootstrap.css' %}"/>
+    <script src="{% static '/js/jquery.min.js' %}"></script>
+    <script src="{% static '/layer/layer.js' %}"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(to right, #0033cc, #66ccff);
+            color: #191A28;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            flex-direction: column;
+            font-size: 18px;
+        }
+
+        .control-label {
+            text-align: right;
+        }
+    </style>
+</head>
+<body>
+<div class="modal-dialog" style="margin-top:0px;">
+    <div class="modal-content">
+        <div class="modal-header">
+            <h3 class="modal-title text-center" style="color:#337ab7;" id="myModalLabel">欢迎登录 LLM 知识库管理平台</h3>
+        </div>
+        <div class="modal-body" id="model-body">
+            <div class="row">
+                <form action="/authing/login/" method="post">
+                    {% csrf_token %}
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-sm-3 control-label" for="account">用户名:</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <input type="text" class="form-control" id="account" name="username"
+                                   placeholder="输入用户名" autocomplete="off" required
+                                   oninvalid="this.setCustomValidity('请输入您的用户名')"
+                                   oninput="this.setCustomValidity('')">
+                        </div>
+                        <label class="col-lg-1 col-sm-1 control-label">&nbsp;</label>
+                    </div>
+                    <div class="form-group row">
+                        <label class="col-lg-3 col-sm-3 control-label" for="pwd">密码:</label>
+                        <div class="col-lg-8 col-sm-8">
+                            <input type="password" class="form-control" id="pwd" name="password" placeholder="输入密码"
+                                   autocomplete="off" required oninvalid="this.setCustomValidity('请输入您的密码')"
+                                   oninput="this.setCustomValidity('')">
+                        </div>
+                        <label class="col-lg-1 col-sm-1 control-label">&nbsp;</label>
+                    </div>
+                    <div class="modal-footer">
+                        <div class="form-group" align="center">
+                            <button type="submit" class="btn btn-primary form-control" style="width:200px;">登录
+                            </button>
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <div align="center">
+                            <a href="/authing/register/">注册模型新用户</a>
+                        </div>
+                    </div>
+                </form>
+                {% if user_not_exist %}
+                    <div class="">
+                        <div align="center">
+                            <span id="error_msg" style="color:red;font-weight:bold">用户名不存在</span>
+                        </div>
+                    </div>
+                {% endif %}
+                {% if psw_not_match %}
+                    <div class="">
+                        <div align="center">
+                            <span id="error_msg" style="color:red;font-weight:bold">错误的密码</span>
+                        </div>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div><!-- /.modal-content -->
+</div>
+</body>
+<!--<script type="application/javascript" src="../static/js/login.js">-->
+
+<!--</script>-->
+</html>

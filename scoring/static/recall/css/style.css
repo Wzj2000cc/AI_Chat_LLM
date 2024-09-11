@@ -1,0 +1,234 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #0033cc, #66ccff);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: rgba(0, 0, 0, 0.7);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    width: 100%;
+    max-width: 1000px;
+}
+
+/* 弹窗样式 */
+.modal {
+    display: none; /* 隐藏弹窗 */
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background: linear-gradient(to right, #0033cc, #66ccff);
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+    max-height: 80%;
+    overflow-y: auto;
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* 加载动画样式 */
+#loading {
+    display: none; /* 隐藏加载动画 */
+    position: fixed;
+    z-index: 2;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    padding: 20px;
+    border-radius: 5px;
+}
+
+/* 表格样式 */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+
+h1 {
+    text-align: center;
+    color: #fff;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="search"], input[type="number"], select {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    background: #fff;
+    color: #333;
+}
+
+input[type="text"]::placeholder, input[type="number"]::placeholder {
+    color: #999;
+}
+
+select {
+    background: #f9f9f9;
+    color: #333;
+}
+
+.back-button {
+    display: inline-block;
+    color: #999999; /* 设置箭头颜色 */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: underline; /* 添加下划线 */
+    font-style: italic; /* 设置斜体 */
+    font-size: 20px; /* 设置字体大小 */
+    text-align: left; /* 确保文字左对齐 */
+    margin-top: 10px;
+}
+
+.back-button:hover {
+    color: #007bff; /* 悬停时箭头颜色 */
+}
+
+button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: #0066cc;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+button[type="submit"]:hover {
+    background: #004d99;
+}
+
+/* 头部信息 */
+.lyear-layout-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 4;
+    -webkit-transition: padding 0.3s;
+    transition: padding 0.3s;
+    -webkit-box-shadow: 4px 0 5px rgba(0, 0, 0, 0.035);
+    -moz-box-shadow: 4px 0 5px rgba(0, 0, 0, 0.035);
+    box-shadow: 4px 0 5px rgba(0, 0, 0, 0.035);
+    background: #004d99;
+    height: 70px;
+}
+
+.lyear-layout-header .navbar {
+    position: relative;
+    min-height: 50px;
+    border: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.lyear-layout-header .navbar-default {
+    background-color: transparent;
+}
+
+.topbar {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
+    min-height: 64px;
+    padding: 0 15px;
+}
+
+.topbar .topbar-left {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+
+.topbar-right > li > a {
+    position: relative;
+    display: block;
+    padding: 10px 0 10px 15px;
+}
+
+.navbar-page-title {
+    display: inline-block;
+    margin-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 18px;
+}
+
+.navbar-page-title a {
+    color: white;
+    text-decoration: none; /* 可选：去掉链接下划线 */
+}
+
+.navbar-page-title a:hover {
+    color: #007bff; /* 点击时的颜色 */
+}
+
+.wrapper {
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    margin-bottom: 10px;
+}
+

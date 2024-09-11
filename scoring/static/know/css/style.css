@@ -1,0 +1,268 @@
+/* 全局样式 */
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #0033cc, #66ccff);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: auto;
+    margin: 0;
+    flex-direction: column;
+    font-size: 18px;
+}
+
+
+/* 容器样式 */
+.wrapper {
+    background: rgba(0, 0, 0, 0.4);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 80%;
+    margin-bottom: 50px;
+}
+
+.divider {
+    height: 2px; /* 设置分割线高度 */
+    background: #999999; /* 分割线颜色 */
+    margin: 5px 0; /* 分割线的上下间距 */
+}
+
+/* 标题 */
+h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
+    font-family: -apple-system, BlinkMacSystemFont, 'Helvetica Neue', 'PingFang SC', 'Microsoft YaHei', 'Source Han Sans SC', 'Noto Sans CJK SC', 'WenQuanYi Micro Hei', sans-serif;
+    line-height: 1.5;
+    letter-spacing: 1px;
+}
+
+.h1, .h2, .h3, .h4, .h5, .h6, h1, h2, h3, h4, h5, h6 {
+    margin-top: 0;
+    margin-bottom: .5rem;
+}
+
+
+.form-group {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="file"],
+input[type="text"],
+#embedding {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    background: #fff;
+    color: #000000;
+}
+
+input[type="file"]:hover,
+input[type="text"]:hover,
+#embedding {
+    border-color: #0066cc;
+    box-shadow: 0 0 10px rgba(0, 184, 148, 0.5);
+}
+
+.button-container {
+    text-align: center; /* 可选，水平居中对齐按钮 */
+}
+
+button {
+    display: inline-block;
+    width: 100%;
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: #0066cc;
+    color: #fff;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background 0.3s;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #004d99;
+}
+
+
+select {
+    width: 93%;
+    background: #fff;
+    border: 1px solid #0066cc;
+    padding: 12px;
+    border-radius: 8px;
+    font-size: 16px;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+select:hover {
+    border-color: #004d99;
+    box-shadow: 0 0 10px rgba(0, 184, 148, 0.5);
+}
+
+
+/* 头部信息 */
+.lyear-layout-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 4;
+    -webkit-transition: padding 0.3s;
+    transition: padding 0.3s;
+    -webkit-box-shadow: 4px 0 5px rgba(0, 0, 0, 0.035);
+    -moz-box-shadow: 4px 0 5px rgba(0, 0, 0, 0.035);
+    box-shadow: 4px 0 5px rgba(0, 0, 0, 0.035);
+    background: #004d99;
+    height: 70px;
+}
+
+.lyear-layout-header .navbar {
+    position: relative;
+    min-height: 50px;
+    border: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.lyear-layout-header .navbar-default {
+    background-color: transparent;
+}
+
+.topbar {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
+    min-height: 64px;
+    padding: 0 15px;
+}
+
+.topbar .topbar-left {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.topbar .topbar-right {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: reverse;
+    flex-direction: row-reverse;
+    list-style: none;
+}
+
+.topbar-right > li > a {
+    position: relative;
+    display: block;
+    padding: 10px 0 10px 15px;
+}
+
+.navbar-page-title {
+    display: inline-block;
+    margin-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 18px;
+}
+
+.navbar-page-title a {
+    color: white;
+    text-decoration: none; /* 可选：去掉链接下划线 */
+}
+
+.navbar-page-title a:hover {
+    color: #007bff; /* 点击时的颜色 */
+}
+
+/* 基本布局 */
+.row {
+    display: block;
+    flex-wrap: wrap; /* 允许换行 */
+    gap: 16px; /* 设置卡片间距 */
+}
+
+/* card */
+.card {
+    margin-bottom: 24px;
+    margin-top: 18px;
+    background-color: #e0e0e0; /* 深色背景，可以根据需要调整 */
+    -webkit-box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    height: 80%; /* 确保卡片高度充满列 */
+
+}
+
+.card-header {
+    width: 100%;
+    margin: 0;
+    padding: 15px 24px;
+    border-bottom: 1px solid rgba(77, 82, 89, 0.05);
+    box-sizing: border-box;
+    background-color: #0066cc; /* 更深的背景色 */
+    color: #fff; /* 更改文本颜色为白色以对比背景色 */
+}
+
+.card-header > * {
+    margin: 0;
+    display: block; /* 确保标题元素垂直排列 */
+}
+
+.card-header h4 {
+    font-size: 16px;
+    margin: 5px 0; /* 控制标题之间的间距 */
+}
+
+.card-actions {
+    float: right;
+}
+
+.card-actions > li {
+    display: inline-block;
+    padding: 0;
+}
+
+.card-actions > li > button {
+    color: #fff; /* 按钮文字颜色 */
+    background: none;
+    border: none;
+    padding: 0;
+    line-height: 1;
+    opacity: .7;
+    vertical-align: middle;
+    -webkit-transition: opacity 0.15s ease-out;
+    transition: opacity 0.15s ease-out;
+}
+
+.card-actions > li > button:hover {
+    text-decoration: none;
+    opacity: 1;
+}
+
+.card-actions > li > button:active {
+    opacity: .6;
+}
+
+.card-actions > li + li {
+    margin-left: 10px;
+}

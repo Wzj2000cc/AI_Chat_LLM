@@ -1,0 +1,190 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #0033cc, #66ccff);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    flex-direction: column;
+    font-size: 18px;
+    padding: 20px;
+}
+
+.divider {
+    height: 2px; /* 设置分割线高度 */
+    background: #999999; /* 分割线颜色 */
+    margin: 5px 0; /* 分割线的上下间距 */
+}
+
+/* 头部信息 */
+.lyear-layout-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 4;
+    -webkit-transition: padding 0.3s;
+    transition: padding 0.3s;
+    -webkit-box-shadow: 4px 0 5px rgba(0, 0, 0, 0.035);
+    -moz-box-shadow: 4px 0 5px rgba(0, 0, 0, 0.035);
+    box-shadow: 4px 0 5px rgba(0, 0, 0, 0.035);
+    background: #004d99;
+    height: 70px;
+}
+
+.lyear-layout-header .navbar {
+    position: relative;
+    min-height: 50px;
+    border: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.lyear-layout-header .navbar-default {
+    background-color: transparent;
+}
+
+.topbar {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
+    min-height: 64px;
+    padding: 0 15px;
+}
+
+.topbar .topbar-left {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+
+.topbar-right > li > a {
+    position: relative;
+    display: block;
+    padding: 10px 0 10px 15px;
+}
+
+.navbar-page-title {
+    display: inline-block;
+    margin-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 18px;
+}
+
+.navbar-page-title a {
+    color: white;
+    text-decoration: none; /* 可选：去掉链接下划线 */
+}
+
+.navbar-page-title a:hover {
+    color: #007bff; /* 点击时的颜色 */
+}
+
+
+.rate:not(:checked) > input {
+    position: absolute;
+    top: -9999px;
+}
+
+.rate:not(:checked) > label {
+    float: right;
+    width: 1em;
+    overflow: hidden;
+    white-space: nowrap;
+    cursor: pointer;
+    font-size: 30px;
+    color: #ccc;
+}
+
+.rate:not(:checked) > label:before {
+    content: '★ ';
+}
+
+.rate > input:checked ~ label {
+    color: #ffc700;
+}
+
+.rate:not(:checked) > label:hover,
+.rate:not(:checked) > label:hover ~ label {
+    color: #deb217;
+}
+
+.rate > input:checked + label:hover,
+.rate > input:checked + label:hover ~ label,
+.rate > input:checked ~ label:hover,
+.rate > input:checked ~ label:hover ~ label,
+.rate > label:hover ~ input:checked ~ label {
+    color: #c59b08;
+}
+
+p {
+    font-size: 22px;
+    margin-top: 18px;
+}
+
+.back-button {
+    display: inline-block;
+    color: #999999; /* 设置箭头颜色 */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: underline; /* 添加下划线 */
+    font-style: italic; /* 设置斜体 */
+    font-size: 20px; /* 设置字体大小 */
+    text-align: left; /* 确保文字左对齐 */
+    margin-top: 5px;
+}
+
+.back-button:hover {
+    color: #007bff; /* 悬停时箭头颜色 */
+}
+
+.container {
+    position: relative;
+    display: flex;
+    flex-direction: row; /* 水平排列按钮 */
+    gap: 10px; /* 按钮之间的间距 */
+    top: 100px;
+    margin-left: 85%;
+}
+
+.container button {
+    width: 100px; /* 设置按钮宽度 */
+    padding: 10px; /* 调整内边距以适应新宽度 */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    color: #fff;
+    font-size: 16px; /* 设置字体大小 */
+    max-width: 20%;
+}
+
+#openModalBtn {
+    background-color: #007bff; /* 设置召回按钮的背景颜色 */
+}
+
+#navigateBtn {
+    background-color: #28a745; /* 设置实操按钮的背景颜色 */
+}
+
+/*相关知识库跳转样式*/
+.clickable {
+    cursor: pointer; /* 鼠标悬停时显示手形光标 */
+    color: #fff; /* 默认文字颜色为白色 */
+    text-decoration: underline; /* 添加下划线 */
+    font-style: italic; /* 文字斜体 */
+    transition: color 0.3s ease; /* 颜色变化过渡效果 */
+}
+
+.clickable:hover {
+    color: #007bff; /* 点击时的颜色 */
+}

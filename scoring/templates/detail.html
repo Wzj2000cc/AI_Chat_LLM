@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LLM 知识库管理系统</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}"/>
+    <link rel="stylesheet" href="{% static 'css/materialdesignicons.min.css' %}"/>
+    <link rel="stylesheet" href="{% static 'detail/css/style.css' %}">
+</head>
+<body>
+<!--头部信息-->
+<header class="lyear-layout-header">
+    <nav class="navbar navbar-default">
+        <div class="topbar">
+
+            <div class="topbar-left">
+                <span class="navbar-page-title" style="font-size:30px"> LLM 知识库管理系统</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title"><a href="/scoring/upload/">知识库管理</a></span>
+                <span class="navbar-page-title"><a href="/nl2sql/nl2_upload/">智能问数</a></span>
+                <span class="navbar-page-title"><a href="/scoring/to_llm_id">智能问答</a></span>
+                {% if user.is_authenticated %}
+                    <span class="navbar-page-title"><a href="/authing/profile/">个人信息</a></span>
+                    <span class="navbar-page-title"><a href="/authing/logout/">退出</a></span>
+                {% else %}
+                    <span class="navbar-page-title"><a href="/authing/login/">登录/注册</a></span>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+</header>
+<!--End 头部信息-->
+
+<!--页面主要内容-->
+<main class="lyear-layout-content">
+    <div class="container-fluid">
+        <a href="/scoring/upload/" class="back-button">←返回</a>
+        <div class="row">
+            <div class="col-sm-6 col-lg-7" style="width:100%">
+                <div class="card" style="height:150px;">
+                    <h2>基础信息</h2>
+                    <div class="divider"></div> <!-- 分割线 -->
+                    <div class="card-body">
+                        <p style="display: none" id="hiddenID">{{ ID }}</p>
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                <p>知识库名称：{{ kg_name }}</p>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <p>知识库简介：{{ know_content }}</p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                <p>知识库类型：{{ kg_type }}</p>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <p>
+                                    关联项目名称：
+                                    {% if project_name %}
+                                        <span id="project_name" class="clickable">{{ project_name }}</span>
+                                    {% endif %}
+                                </p>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="col-lg-6 col-sm-12">
+                                <p>创建时间：{{ kg_create_time }}</p>
+                            </div>
+                            <div class="col-lg-6 col-sm-12">
+                                <p>数据量：{{ kg_count }}</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6 col-lg-7" style="width:100%">
+                <h2>数据预览</h2>
+                <div class="card " style="height:350px">
+                    <div class="divider"></div> <!-- 分割线 -->
+                    <div class="card-body" style="margin-left: 10px">
+                        {% for i in kg_data_view %}
+                            <li title="{{ i }}" style="font-size: 22px; margin-top: 18px;">
+                                {{ i|truncatechars:"85" }}
+                            </li>
+                        {% endfor %}
+                    </div>
+                    <div class="container">
+                        <button id="openModalBtn">召回测试</button>
+                        {#                        <button id="navigateBtn">实操</button>#}
+                        <button id="deleteBtn">删除</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+</body>
+<script type="application/javascript">
+    function fetchDetails(name) {
+        location.href = "/nl2sql/nl2_detail/" + encodeURIComponent(name) + "/";
+    }
+
+    document.getElementById('openModalBtn').onclick = function () {
+        // 获取隐藏元素中的 ID
+        const id = document.getElementById('hiddenID').textContent;
+
+        // 导航到新 URL
+        window.location.href = "{% url 'get_recall' id=0 %}".replace('0', id);
+    };
+
+    document.getElementById('deleteBtn').onclick = function () {
+        // 获取隐藏元素中的 ID
+        const id = document.getElementById('hiddenID').textContent;
+        const url = "{% url 'delete_know' id=0 %}".replace('0', id);
+        // 确认对话框
+        if (confirm('确定要删除吗？')) {
+            // 如果用户确认，执行删除操作
+            alert('删除成功！');
+            window.location.href = url;
+        } else {
+            // 如果用户取消，什么也不做
+            alert('删除操作已取消。');
+        }
+    };
+
+    // 添加点击事件处理程序
+    document.getElementById('project_name').addEventListener('click', function () {
+        const name = this.textContent;
+        fetchDetails(name);
+    });
+
+    {#document.getElementById('navigateBtn').onclick = function () {#}
+    {#    // 获取隐藏元素中的 ID#}
+    {#    const id = document.getElementById('hiddenID').textContent;#}
+    {##}
+    {#    // 导航到新 URL#}
+    {#    window.location.href = "{% url 'to_llm_id' id=0 %}".replace('0', id);};#}
+
+</script>
+
+</html>

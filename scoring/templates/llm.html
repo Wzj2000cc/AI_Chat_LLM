@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>LLM 知识库管理系统</title>
+    <link rel="stylesheet" href="{% static 'llm/css/main.css' %}">
+</head>
+<body>
+
+<!--头部信息-->
+<header class="lyear-layout-header">
+    <nav class="navbar navbar-default">
+        <div class="topbar">
+
+            <div class="topbar-left">
+                <span class="navbar-page-title" style="font-size:30px"> LLM 知识库管理系统</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title"><a href="/scoring/upload/">知识库管理</a></span>
+                <span class="navbar-page-title"><a href="/nl2sql/nl2_upload/">智能问数</a></span>
+                <span class="navbar-page-title"><a href="/scoring/to_llm_id">智能问答</a></span>
+                {% if user.is_authenticated %}
+                    <span class="navbar-page-title"><a href="/authing/profile/">个人信息</a></span>
+                    <span class="navbar-page-title"><a href="/authing/logout/">退出</a></span>
+                {% else %}
+                    <span class="navbar-page-title"><a href="/authing/login/">登录/注册</a></span>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+</header>
+<!--End 头部信息-->
+
+<div id="chat-container">
+    {#    <a href="javascript:history.back()" class="back-button">←返回</a>#}
+    <div class="divider-row"></div> <!-- 分割线 -->
+    <div class="container">
+        <div id="chat-box" class="chat-box left">
+            <div class="message answer">
+                <div>欢迎使用智能问答服务机器人🤖！请选择超参数后接着输入问题方可进行提问🤡</div>
+            </div>
+        </div>
+        <div class="divider-column"></div> <!-- 竖分割线 -->
+        <div id="chat-box" class="chat-box right">
+            <div class="form-group">
+                <label for="scene">* 请进行场景选择（必选）</label>
+                <select name="scene" id="scene">
+                    <option value="" disabled selected>请选择场景</option>
+                    <option value="通用场景">通用场景问答</option>
+                    <option value="营销审计">营销审计问答</option>
+                    <option value="底稿推荐" disabled>审计底稿推荐（融合中不可用）</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="embedding_es">* ES知识库名称（必选）</label>
+                <select name="embedding_es" id="embedding_es">
+                    <option value="" disabled selected>请选择 ES 知识库</option>
+                    {% if final_dict.ES %}
+                        {% for option in final_dict.ES %}
+                            <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+                <label for="embedding_milvus">* Milvus知识库名称（必选）</label>
+                <select name="embedding_milvus" id="embedding_milvus">
+                    <option value="" disabled selected>请选择 Milvus 知识库</option>
+                    {% if final_dict.Milvus %}
+                        {% for option in final_dict.Milvus %}
+                            <option value="{{ option }}">{{ option }}</option>
+                        {% endfor %}
+                    {% endif %}
+                </select>
+                <label for="llm_model">* 选择 LLM 模型（必选）</label>
+                <select name="llm_model" id="llm_model">
+                    <option value="" disabled selected>请选择 LLM 模型</option>
+                    <option value="文心千帆">文心千帆</option>
+                    <option value="通义千问">通义千问</option>
+                    <option value="讯飞星火">讯飞星火</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label for="cu_count">* 粗召回数量（选填）</label>
+                <input type="number" name="cu_count" id="cu_count" placeholder="（默认10）请输入整数..."/>
+                <label for="jg_count">* 精召回数量（选填）</label>
+                <input type="number" name="jg_count" id="jg_count" placeholder="（默认5）请输入整数..."/>
+                <label for="temperature">温度值（选填）</label>
+                <input type="number" name="temperature" id="temperature" placeholder="（默认0.01）请输入浮点数..." step="0.01"/>
+                <label for="rewrite_count">问题改写数量（选填）</label>
+                <input type="number" name="rewrite_count" id="rewrite_count" placeholder="（默认0）请输入整数..."/>
+            </div>
+        </div>
+    </div>
+    <div id="input-container">
+        <textarea id="message-input" placeholder="输入消息...（点击发送或按下 Ctrl + Enter 发送消息）"
+                  style="height: 80px"></textarea>
+        <button id="send-button" title="发送消息" style="height: 60px">➤</button>
+    </div>
+    <button id="reset-button"
+            onmouseover="this.style.backgroundColor='#808080';"
+            onmouseout="this.style.backgroundColor='#A9A9A9';">
+        重新对话
+    </button>
+</div>
+
+
+<script src="{% static 'llm/js/jquery.js' %}"></script>
+<script src="{% static 'llm/js/marked.js' %}"></script>
+<script src="{% static 'llm/js/main.js' %}"></script>
+<script>
+    $(document).ready(function () {
+
+        $('#reset-button').click(function () {
+            $('#chat-box').empty();
+            $('#chat-box').html(`
+            <div class="message answer">
+                <div>欢迎使用国网 ChatGPT🤖 智能机器人！请输入问题进行提问⬇️：
+                </div>
+            </div>
+        `);
+        });
+
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LLM 知识库管理系统</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/materialdesignicons.min.css' %}">
+    <link rel="stylesheet" href="{% static 'know/css/style.css' %}">
+
+</head>
+<body>
+<header class="lyear-layout-header">
+    <nav class="navbar navbar-default">
+        <div class="topbar">
+
+            <div class="topbar-left">
+                <span class="navbar-page-title" style="font-size:30px"> LLM 知识库管理系统</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title">&nbsp;</span>
+            </div>
+            <div class="topbar-left">
+                <span class="navbar-page-title"><a href="/scoring/upload/">知识库管理</a></span>
+                <span class="navbar-page-title"><a href="/nl2sql/nl2_upload/">智能问数</a></span>
+                <span class="navbar-page-title"><a href="/scoring/to_llm_id">智能问答</a></span>
+                {% if user.is_authenticated %}
+                    <span class="navbar-page-title"><a href="/authing/profile/">个人信息</a></span>
+                    <span class="navbar-page-title"><a href="/authing/logout/">退出</a></span>
+                {% else %}
+                    <span class="navbar-page-title"><a href="/authing/login/">登录/注册</a></span>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+</header>
+<div class="wrapper" style="margin-top: 5%">
+    <h2>知识库建设容器</h2>
+    <div class="divider"></div> <!-- 分割线 -->
+    <form id="uploadForm" enctype="multipart/form-data">
+        <div class="form-group">
+            <label for="file">* 知识文件上传（请按照 ➡️ xlsx模板chunk进行切片上传）&nbsp;&nbsp;&nbsp;&nbsp;<a
+                    href="{% url 'download' %}" download
+                    style="color: #999999">【点击👆下载知识库上传标准模板文件】</a></label>
+            <input type="file" name="file" id="file" accept=".xlsx"/>
+        </div>
+        <div class="form-group">
+            <label for="name">* 知识库名称</label>
+            <input type="text" name="name" id="name"
+                   placeholder="请输入知识库名称（仅支持字母下划线数字、且不能以数字开头）"
+                   oninput="validateInput(this)"/>
+        </div>
+        <div class="form-group">
+            <label for="name">知识库简介</label>
+            <input type="text" name="content" id="content" placeholder="描述一些内容......"/>
+        </div>
+        <div class="form-group">
+            <label for="name">* 选择知识库类型及算法</label>
+            <select name="embedding" id="embedding">
+                <option value="" disabled selected>请选择知识库类型及算法</option>
+                <optgroup label="ElasticSearch" id="type">
+                    <option value="ES@BM25">BM25</option>
+                </optgroup>
+                <optgroup label="Milvus" id="type">
+                    <option value="Milvus@bge-base-zh">BGE Base</option>
+                </optgroup>
+            </select>
+        </div>
+        {% csrf_token %}
+        <button type="submit">点击👆创建知识库</button>
+    </form>
+</div>
+
+<div class="wrapper">
+    <h2>知识库信息容器</h2>
+    <div class="divider"></div> <!-- 分割线 -->
+    <div class="row" id="carList"></div>
+</div>
+<!--End 页面主要内容-->
+<script>
+    function validateInput(input) {
+        // Get the current value of the input field
+        const value = input.value;
+
+        // Define regex to match valid characters (letters, numbers, and underscores) and filter out invalid characters
+        const validCharsRegex = /^[a-zA-Z0-9_]*$/;
+
+        // Remove characters that are not valid
+        input.value = value.split('').filter(char => validCharsRegex.test(char)).join('');
+
+        // Ensure the input does not start with a digit
+        if (/^\d/.test(input.value)) {
+            input.value = input.value.replace(/^\d/, '');
+        }
+    }
+
+    // 从DOM中获取CSRF令牌
+    const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    document.getElementById('uploadForm').onsubmit = function (event) {
+        event.preventDefault();
+        const formData = new FormData(this);
+        alert('知识库建设已在后台开始执行');
+        // 显示提示信息
+        fetch('/scoring/upload/', {
+            method: 'POST',
+            headers: {
+                'X-CSRFToken': csrftoken
+            },
+            body: formData
+        })
+            .then(response => response.json())
+            .then(data => {
+                alert(data.message);
+            })
+        location.reload();
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        // 这个函数用于渲染卡片
+        function renderCards(data) {
+            const carList = document.getElementById('carList');
+            carList.innerHTML = ''; // 清空现有内容
+
+            data.forEach(item => {
+                const [name, type, id, statute] = item;
+                const cardHtml = `
+                <div class="col-sm-6 col-lg-3">
+                    <div class="card">
+                        <div class="card-header bg-info">
+                            <h4 style="display: none">ID:${id}</h4>
+                            <h4 style="white-space:nowrap;overflow:hidden;">名称:${name}</h4>
+                            <h4 style="white-space:nowrap;overflow:hidden;">类型:${type}</h4>
+                            <h4 style="white-space:nowrap;overflow:hidden;">状态:${statute}</h4>
+                            <ul class="card-actions">
+                                <li>
+                                    <button type="button" onclick="fetchDetails('${id}')" ${statute === '执行中' ? 'disabled' : ''}>
+                                    <i class="mdi mdi-more"></i>详情信息</button>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            `;
+                carList.insertAdjacentHTML('beforeend', cardHtml);
+            });
+        }
+
+        // 获取数据
+        fetch('/scoring/select/')
+            .then(response => response.json())
+            .then(data => {
+                renderCards(data.message);
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    });
+
+    function fetchDetails(id) {
+        location.href = "/scoring/detail/" + id + "/"
+    }
+
+
+</script>
+</body>
+</html>

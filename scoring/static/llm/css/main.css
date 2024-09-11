@@ -1,0 +1,436 @@
+body {
+    font-family: 'Arial', sans-serif;
+    background: linear-gradient(to right, #0033cc, #66ccff);
+    color: #fff;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+    flex-direction: column;
+    font-size: 18px;
+}
+
+/* 头部信息 */
+.lyear-layout-header {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    z-index: 4;
+    -webkit-transition: padding 0.3s;
+    transition: padding 0.3s;
+    -webkit-box-shadow: 4px 0 5px rgba(0, 0, 0, 0.035);
+    -moz-box-shadow: 4px 0 5px rgba(0, 0, 0, 0.035);
+    box-shadow: 4px 0 5px rgba(0, 0, 0, 0.035);
+    background: #004d99;
+    height: 70px;
+}
+
+.lyear-layout-header .navbar {
+    position: relative;
+    min-height: 50px;
+    border: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+}
+
+.lyear-layout-header .navbar-default {
+    background-color: transparent;
+}
+
+.topbar {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-pack: justify;
+    justify-content: space-between;
+    -webkit-box-align: center;
+    align-items: center;
+    min-height: 64px;
+    padding: 0 15px;
+}
+
+.topbar .topbar-left {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+}
+
+.topbar .topbar-right {
+    display: -webkit-box;
+    display: flex;
+    -webkit-box-align: center;
+    align-items: center;
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: reverse;
+    flex-direction: row-reverse;
+    list-style: none;
+}
+
+.topbar-right > li > a {
+    position: relative;
+    display: block;
+    padding: 10px 0 10px 15px;
+}
+
+.navbar-page-title {
+    display: inline-block;
+    margin-right: 20px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    font-size: 18px;
+}
+
+.navbar-page-title a {
+    color: white;
+    text-decoration: none; /* 可选：去掉链接下划线 */
+}
+
+.navbar-page-title a:hover {
+    color: #007bff; /* 点击时的颜色 */
+}
+
+/* 横分割线样式 */
+.divider-row {
+    height: 2px; /* 设置分割线高度 */
+    background: #999999; /* 分割线颜色 */
+    /*margin: 5px 0; !* 分割线的上下间距 *!*/
+    margin-top: 70px;
+    margin-bottom: 5px;
+}
+
+/* 竖分割线样式 */
+.divider-column {
+    width: 2px; /* 分割线宽度 */
+    background-color: #999999; /* 分割线颜色 */
+    height: 95%; /* 高度为容器的100% */
+    margin: 0 10px; /* 分割线两边的间距 */
+}
+
+/* 聊天容器 */
+#chat-container {
+    display: flex;
+    width: 100%;
+    height: 100vh;
+    padding: 10px;
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    background: transparent;
+    flex-direction: column;
+    box-sizing: border-box;
+}
+
+.container {
+    display: flex;
+    margin-top: 10px;
+    width: 100%;
+    height: 90vh;
+}
+
+/* 左侧聊天框 */
+.chat-box.left {
+    flex: 8; /* 70% 宽度 */
+    padding: 10px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    max-height: 565px; /* 最大高度 565px，超出部分显示滚动条 */
+}
+
+/* 右侧聊天框 */
+.chat-box.right {
+    flex: 2; /* 30% 宽度 */
+    padding: 10px;
+    overflow-y: auto;
+    max-height: 565px;
+}
+
+/* 聊天框 */
+#chat-box {
+    overflow-y: auto;
+    padding: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    flex-direction: column;
+}
+
+
+/* 消息输入框 */
+#message-input {
+    flex: 1;
+    height: 50px;
+    margin-right: 10px;
+    box-sizing: border-box;
+    padding: 10px; /* 增加内边距，提升输入体验 */
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px; /* 设置字体大小 */
+    color: #333; /* 设置文本颜色 */
+    font-family: Arial, sans-serif; /* 设置字体 */
+    line-height: 1.5; /* 调整行高 */
+    transition: border-color 0.3s ease; /* 添加过渡效果 */
+}
+
+/* 输入框的占位符样式 */
+#message-input::placeholder {
+    color: #aaa; /* 设置占位符颜色 */
+    font-size: 14px; /* 设置占位符字体大小 */
+    font-family: Arial, sans-serif; /* 设置占位符字体 */
+}
+
+/* 消息输入框的焦点状态 */
+#message-input:focus {
+    border-color: #007bff; /* 设置焦点边框颜色 */
+    outline: none; /* 去除默认的输入框轮廓 */
+}
+
+/* 消息容器 */
+.message {
+    margin-bottom: 10px;
+    max-width: 70%;
+    padding: 5px 10px;
+    border-radius: 5px;
+    display: block;
+    align-items: center;
+}
+
+/* 消息图标 */
+.message-icon {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+/* 问题（右侧） */
+.message.question {
+    align-self: flex-end;
+    background-color: #d1e7dd;
+    color: #363636;
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+a {
+    text-decoration: none;
+}
+
+/* 回答（左侧） */
+.message.answer {
+    align-self: flex-start;
+    background-color: #f8edee;
+    color: #363636;
+}
+
+/* 添加滚动条样式（可选） */
+#chat-box::-webkit-scrollbar {
+    width: 8px;
+}
+
+#chat-box::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+#chat-box::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+/* 其他样式... */
+
+/* 按钮输入框容器 */
+#input-container {
+    display: flex;
+    align-items: center;
+    position: relative; /* 使其子元素的绝对定位相对于它 */
+}
+
+/* 发送按钮 */
+#send-button {
+    width: 50px;
+    height: 50px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative; /* 使其子元素的绝对定位相对于它 */
+}
+
+/* 侧边按钮容器 */
+#side-buttons {
+    position: absolute;
+    bottom: 60px; /* 放置在发送按钮的上方 */
+    right: 0; /* 对齐到发送按钮的右侧 */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    opacity: 0; /* 初始隐藏 */
+    visibility: hidden; /* 初始隐藏 */
+    transition: opacity 0.3s ease, visibility 0.3s ease; /* 平滑过渡效果 */
+}
+
+/* 按钮样式 */
+#side-buttons button {
+    width: 50px;
+    height: 50px;
+    border: none;
+    background-color: #007bff;
+    color: #fff;
+    font-size: 24px;
+    border-radius: 5px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+/* 按钮悬停效果 */
+#side-buttons button:hover {
+    background-color: #0056b3;
+}
+
+/* 特定按钮样式 */
+#recommend-button {
+    background-color: #28a745;
+}
+
+#recommend-button:hover {
+    background-color: #1e7e34;
+}
+
+#output-button {
+    background-color: #ffc107;
+}
+
+#output-button:hover {
+    background-color: #e0a800;
+}
+
+
+/* 表格样式 */
+table {
+    width: 100%;
+    border-collapse: separate; /* 分开边框 */
+    border-spacing: 0; /* 去掉间距 */
+    background-color: #f9f9f9;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+}
+
+/* 表头样式 */
+table thead {
+    background-color: #4CAF50;
+    color: white;
+}
+
+table thead th {
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 14px;
+    border-bottom: 2px solid #388e3c; /* 下边框 */
+}
+
+/* 表格行样式 */
+table tbody tr {
+    border-bottom: 1px solid #ddd;
+}
+
+table tbody td {
+    padding: 12px 15px;
+    text-align: left;
+    font-size: 14px;
+}
+
+/* 表格行悬停效果 */
+table tbody tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* 表格最后一行边框样式 */
+table tfoot {
+    background-color: #f2f2f2;
+    font-weight: bold;
+}
+
+table tfoot td {
+    padding: 12px 15px;
+    border-top: 2px solid #ddd;
+}
+
+
+.back-button {
+    display: inline-block;
+    color: #999999; /* 设置箭头颜色 */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    text-decoration: underline; /* 添加下划线 */
+    font-style: italic; /* 设置斜体 */
+    font-size: 20px; /* 设置字体大小 */
+    text-align: left; /* 确保文字左对齐 */
+    margin-top: 70px;
+}
+
+.back-button:hover {
+    color: #007bff; /* 悬停时箭头颜色 */
+}
+
+/*右侧form表单*/
+.form-group {
+    margin-top: 15px;
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"],
+#scene,
+#embedding_es,
+#embedding_milvus,
+#llm_model {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    background: #fff;
+    color: #000000;
+}
+
+input[type="text"]:hover,
+input[type="number"],
+#scene,
+#embedding_es,
+#embedding_milvus,
+#llm_model {
+    border-color: #0066cc;
+    box-shadow: 0 0 10px rgba(0, 184, 148, 0.5);
+}
+
+#reset-button {
+    background-color: #A9A9A9; /* 深灰色背景 */
+    color: #ffffff; /* 白色文字 */
+    padding: 10px 10px; /* 上下内边距20px，左右内边距20px */
+    margin: 5px;
+    border: none; /* 无边框 */
+    border-radius: 5px; /* 圆角 */
+    font-size: 14px; /* 字体大小 */
+    text-align: center; /* 文字居中 */
+    width: 99%; /* 宽度占满父容器 */
+    height: 35px; /* 高度100px */
+    cursor: pointer; /* 鼠标悬停时显示手型光标 */
+    transition: background-color 0.3s; /* 背景色变化过渡效果 */
+}
