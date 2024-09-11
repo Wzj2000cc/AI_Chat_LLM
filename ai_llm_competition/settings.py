@@ -182,8 +182,8 @@ nl2_sql_conn = mysql.connector.connect(
 )
 
 # -------------------------------------- 文心千帆 ------------------------------------------------
-os.environ["QIANFAN_AK"] = "vZleY7SF2x4S3euJvXgYK1ta"
-os.environ["QIANFAN_SK"] = "XnkygwUQC8OmshvkGIwkv6omG1TVyvcJ"
+os.environ["QIANFAN_AK"] = "xxx"
+os.environ["QIANFAN_SK"] = "xxx"
 
 
 def get_Qianfan(question):
@@ -196,11 +196,8 @@ def get_Qianfan(question):
 # -------------------------------------- 通义千问 ------------------------------------------------
 def get_Tongyi(question):
     llm = Tongyi(
-        # model_name='qwen1.5-72b-chat',
-        model_name='qwen2-72b-instruct',
-        # dashscope_api_key='sk-12120561a8554f319a08ad4469eb3f9a',  # 国电通1
-        # dashscope_api_key='sk-f6aa7562af8a4e5287b8c2f7b04bfb5b',  # 国电通2
-        dashscope_api_key='sk-79c68526c53c4e959d09b2fbd509ee99',  # 泽军key：9月18到期
+        model_name='qwen2-72b-instruct',  
+        dashscope_api_key='sk-xxx',  # 泽军key：9月18到期
         temperature=0
     )
     result = llm.invoke(question)
@@ -209,8 +206,8 @@ def get_Tongyi(question):
 
 # -------------------------------------- 讯飞星火 ------------------------------------------------
 SPARKAI_APP_ID = 'e0bab50a'
-SPARKAI_API_SECRET = 'OWE4NDljOWZkODRlMDY4NTE2ODNkNmE1'
-SPARKAI_API_KEY = '891a551ae4e57a2d325a211dbcf4f3eb'
+SPARKAI_API_SECRET = 'xxx'
+SPARKAI_API_KEY = 'xxx'
 
 SPARKAI_URL = 'wss://spark-api.xf-yun.com/v3.5/chat'
 SPARKAI_DOMAIN = 'generalv3.5'
@@ -245,8 +242,8 @@ def llm_flow(msg, tempr=0.01, stream_out=False, llm_type=None):
                 if llm_type == '文心千帆':
                     main_llm = QianfanLLMEndpoint(
                         model='ERNIE-Speed-128K',
-                        qianfan_ak='vZleY7SF2x4S3euJvXgYK1ta',
-                        qianfan_sk='XnkygwUQC8OmshvkGIwkv6omG1TVyvcJ',
+                        qianfan_ak='xxx',
+                        qianfan_sk='xxx',
                         temperature=tempr,
                         model_kwargs={'temperature': tempr, "top_k": 2},
                     )
@@ -254,9 +251,7 @@ def llm_flow(msg, tempr=0.01, stream_out=False, llm_type=None):
                     main_llm = Tongyi(
                         # model_name='qwen1.5-72b-chat',
                         model_name='qwen2-72b-instruct',
-                        # dashscope_api_key='sk-12120561a8554f319a08ad4469eb3f9a',  # 国电通1
-                        # dashscope_api_key='sk-f6aa7562af8a4e5287b8c2f7b04bfb5b',  # 国电通2
-                        dashscope_api_key='sk-79c68526c53c4e959d09b2fbd509ee99',  # 泽军key：9月18到期
+                        dashscope_api_key='sk-xxx',  # 泽军key：9月18到期
                         model_kwargs={'temperature': tempr, "top_k": 2},
                     )
                 if not stream_out:
