@@ -21,7 +21,7 @@ from FlagEmbedding import FlagReranker
 from concurrent.futures import ThreadPoolExecutor
 
 from ai_llm_competition.settings import es_config, milvus_config, conn, BASE_DIR, get_Qianfan, get_Tongyi, get_Spark, \
-    llm_flow
+    llm_flow, generate_text
 
 os.chdir('./')
 
@@ -910,14 +910,24 @@ def llm_chat(request):
 
             def generate():
                 full_response = ""
-                for chunk in llm_flow(llm_prompt, float(temperature), stream_out=True, llm_type=llm_type):
-                    full_response += chunk
-                    # 每次都发送完整的响应
-                    yield f"data: {json.dumps({'message': full_response})}\n\n"
+                if llm_type == 'qwen2:7b':
+                    for char in generate_text(llm_prompt):
+                        full_response += char
+                        yield f"data: {json.dumps({'message': full_response})}\n\n"
+                elif llm_type == '讯飞星火':
+                    for char in get_Spark(llm_prompt):
+                        full_response += char
+                        yield f"data: {json.dumps({'message': full_response})}\n\n"
+                else:
+                    for chunk in llm_flow(llm_prompt, float(temperature), stream_out=True, llm_type=llm_type):
+                        full_response += chunk
+                        # 每次都发送完整的响应
+                        yield f"data: {json.dumps({'message': full_response})}\n\n"
 
             return StreamingHttpResponse(generate(), content_type='application/json')
         except json.JSONDecodeError:
             return JsonResponse({'status': 'error', 'message': 'Invalid JSON'}, status=400)
+
 
 
 def get_llm(request):
