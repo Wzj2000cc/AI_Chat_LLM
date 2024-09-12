@@ -230,6 +230,39 @@ def get_Spark(question):
     result = spark.generate([messages], callbacks=[handler])
     return result.generations[0][0].text
 
+def generate_text(prompt, model="qwen2:7b"):
+    url = "http://127.0.0.1:11434/api/generate"
+
+    data = {
+        "model": model,
+        "prompt": prompt,
+        "stream": False
+    }
+    with requests.post(url, json=data, stream=True) as response:
+        if response.status_code == 200:
+            for chunk in response.iter_lines(decode_unicode=True):
+                if chunk:
+                    try:
+                        # 将每个 chunk 解析为 JSON
+                        parsed_chunk = json.loads(chunk)
+
+                        # 提取并打印 'response' 字段的内容
+                        response_text = parsed_chunk.get('response', '')
+
+                        # 逐字符打印文本，并添加延迟
+                        for char in response_text:
+                            # print(char, end='', flush=True)
+                            yield char
+                            time.sleep(0.05)  # 调整延迟时间以控制打印速度
+
+                        # 检查流是否结束
+                        if parsed_chunk.get('done', False):
+                            # print("\n流式处理完成。")
+                            break
+                    except json.JSONDecodeError as e:
+                        print(f"JSON decode error: {e}")
+        else:
+            print(f"Error: {response.status_code}, {response.text}")
 
 def llm_flow(msg, tempr=0.01, stream_out=False, llm_type=None):
     err_num = 0
